@@ -1,4 +1,4 @@
-# generator-nicefront [![Build Status](https://secure.travis-ci.org/sosoviak/generator-nicefront.png?branch=master)](https://travis-ci.org/sosoviak/generator-nicefront)
+# generator-nicefront
 
 A generator for [Yeoman](http://yeoman.io).
 
