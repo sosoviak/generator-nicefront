@@ -1,0 +1,65 @@
+/* MIXINS */
+@mixin plain{
+	margin: 0;
+	padding: 0;
+}
+
+@mixin opacity ( $value: 0.5 ) {
+  opacity: $value;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=" $value * 100 ")";
+  filter: alpha(opacity= $value * 100 );
+  zoom: 1;
+}
+
+@mixin border-rounded ($value: 5px) {
+	@include border-top-radius($value);
+	@include border-bottom-radius($value);
+	@include border-left-radius($value);
+	@include border-right-radius($value);
+}
+
+$break-small: 767px;
+
+@mixin respond-to($media) {
+  @if $media == mobile {
+    @media only screen and (max-width: $break-small) { @content; }
+  }
+  @else if $media == desktop {
+    @media only screen and (min-width: $break-small + 1) { @content; }
+  }
+}
+
+@mixin box-shadow($top, $left, $blur, $color, $inset:"") {
+    -webkit-box-shadow:$top $left $blur $color #{$inset};
+    -moz-box-shadow:$top $left $blur $color #{$inset};
+    box-shadow:$top $left $blur $color #{$inset};
+}
+
+@mixin box-emboss($opacity, $opacity2){
+    box-shadow:white($opacity) 0 1px 0, inset black($opacity2) 0 1px 0;
+}
+
+// From inuitcss
+@mixin font-size($font-size, $line-height:true){
+    font-size:$font-size;
+    font-size:($font-size / $base-font-size)*1rem;
+    @if $line-height == true{
+        line-height:ceil($font-size / $base-line-height) * ($base-line-height / $font-size);
+    }
+    @else{
+      line-height: $line-height;
+    }
+}
+
+@mixin truncate($truncation-boundary){
+    max-width:$truncation-boundary;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+@mixin retina-img($image_url, $size, $image_ext: png){
+  display: inline-block;
+  @include retina-image($image_url, $size, $image_ext);
+  @include size($size);
+}

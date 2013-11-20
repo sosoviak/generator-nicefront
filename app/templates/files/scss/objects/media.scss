@@ -1,0 +1,23 @@
+// Media object //////////////////
+.media{
+  overflow: hidden;
+  .media__flag{
+    float: left;
+    margin-right: 1.5em;
+    display: block;
+  }
+  .media__info{
+    overflow:hidden;
+  }
+}
+.media--right{
+  overflow: hidden;
+  .media--right__flag{
+    float: right;
+    margin-left: 1.5em;
+    display:block;
+  }
+  .media--right__info{
+    overflow:hidden;
+  }
+}
