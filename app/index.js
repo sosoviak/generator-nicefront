@@ -32,7 +32,7 @@ NicefrontGenerator.prototype.askFor = function askFor() {
     {
       name: 'sourceFolder',
       message: 'Nombre de la carpeta de desarrollo',
-      default: 'source'
+      default: 'src'
     },
     {
       name: 'buildFolder',
