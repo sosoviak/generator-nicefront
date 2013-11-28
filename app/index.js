@@ -27,41 +27,54 @@ NicefrontGenerator.prototype.askFor = function askFor() {
   var prompts = [
     {
       name: 'projectName',
-      message: '¿Cuál es el nombre del proyecto?'
+      message: 'Project name:'
     },
     {
       name: 'sourceFolder',
-      message: 'Nombre de la carpeta de desarrollo',
+      message: 'Source folder name:',
       default: 'src'
     },
     {
       name: 'buildFolder',
-      message: 'Nombre de la carpeta de producción',
+      message: 'Build folder name:',
       default: 'build'
     },
     {
       type: 'confirm',
       name: 'ie8',
-      message: '¿Será compatible con IE8?',
+      message: 'Compatible with IE8?',
       default: true
     },
     {
-      type: 'confirm',
-      name: 'gs',
-      message: '¿Necesitas un Grid System?',
-      default: false
+      type:'list',
+      name: 'cssFramework',
+      message: 'Choose a CSS Framework',
+      choices: [
+        {
+          name: 'Pure CSS',
+          value: 'pure'
+        },
+        {
+          name: 'Inuit',
+          value: 'inuit'
+        }
+      ]    
     },
     {
-      type: 'confirm',
-      name: 'transit',
-      message: '¿Instalo un motor de animaciones css (transit)?',
-      default: false
-    },
-    {
-      type: 'confirm',
-      name: 'lightbox',
-      message: '¿Instalo un plugin para lightbox (Magnific)?',
-      default: false
+      type: 'checkbox',
+      name: 'extras',
+      message: 'What extras you want to install?',
+      choices: [{
+          value: 'extra-transit',
+          name: 'Transit',
+          checked: false
+        },
+        {
+          value: 'extra-lightbox',
+          name: 'Magnific Popup',
+          checked: false
+        }
+      ]
     }
   ];
 
@@ -70,44 +83,68 @@ NicefrontGenerator.prototype.askFor = function askFor() {
     this.sourceFolder = props.sourceFolder;
     this.buildFolder = props.buildFolder;
     this.ie8 =  props.ie8;
-    this.gs = props.gs;
-    this.transit = props.transit;
-    this.lightbox = props.lightbox;
+    this.cssFramework =  props.cssFramework;
+
+    var hasExtra = function (mod) { return props.extras.indexOf(mod) !== -1; };
+    this.transit = hasExtra('extra-transit');
+    this.lightbox = hasExtra('extra-lightbox');
 
     cb();
   }.bind(this));
 };
 
+NicefrontGenerator.prototype.readIndex = function readIndex(){
+  this.indexFile = this.engine(this.read('files/templates/layouts/default.hbs'), this);
+};
+
 NicefrontGenerator.prototype.app = function app() {
-  this.mkdir('source');
-  this.mkdir('source/js');
-  this.mkdir('source/scss');
-  this.mkdir('source/images');
-  this.mkdir('source/layouts');
-  this.mkdir('source/includes');
-  this.mkdir('source/fonts');
-  this.mkdir('build/includes');
+  var bowerPaks = [];
+  var scriptsSrcs = [];
+  var cssSrcs = [];
+
+  this.mkdir('src');
+  this.mkdir('src/assets');
+  this.mkdir('src/assets/js');
+  this.mkdir('src/assets/images');
+  this.mkdir('src/assets/css');
+  this.mkdir('src/assets/css/fonts');
   
-  this.template('files/html/index.html','source/layouts/index.html');
-  this.copy('files/html/head.html','source/includes/head.html');
-  this.copy('files/html/scripts.html','source/includes/scripts.html');
-  this.copy('files/js/plugins.js', 'source/js/plugins.js');
-  this.directory('files/scss/','source/scss');
+  this.directory('files/templates/','src/templates');
+
+  // CSS
+  if (this.cssFramework === 'pure'){
+    this.directory('files/scss/','src/scss');
+    this.copy('file/pure-min.css','src/assets/css/pure-min.css');
+    cssSrcs.push('{{assets}}/css/pure-min.css');
+  } else {
+    bowerPaks.push('inuit.css');
+    this.mkdir('src/scss');
+    this.copy('file/main-inuit.scss', 'src/scss/main.scss');
+  }
+  cssSrcs.push('{{assets}}/css/main.css');
+
+  // JS
+  this.copy('files/js/plugins.js', 'src/assets/js/plugins.js');
+  scriptsSrcs.push('{{assets}}/bower_components/jquery/jquery.js');
+  scriptsSrcs.push('{{assets}}/bower_components/jquery.easing/js/jquery.easing.js');
+  scriptsSrcs.push('{{assets}}/js/plugins.js');
+
   this.copy('files/htaccess', 'build/.htaccess');
   this.copy('files/robots.txt', 'build/robots.txt');
 
-  var bowerPaks = [];
+  
   if (this.ie8){
     bowerPaks.push('jquery#1.10.2');    
   } else {
     bowerPaks.push('jquery');
   }
-  if (this.gs)
-    bowerPaks.push('csswizardry-grids');
+
   if (this.transit)
     bowerPaks.push('jquery.transit');
+    scriptsSrcs.push('{{assets}}/bower_components/jquery.transit/jquery.transit.js');
   if (this.lightbox)
     bowerPaks.push('magnific-popup');
+    scriptsSrcs.push('{{assets}}/bower_components/magnific-popup/dist/jquery.magnific-popup.js');
 
   this.bowerInstall(bowerPaks,{save:true});
 };

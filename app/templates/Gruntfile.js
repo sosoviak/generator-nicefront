@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     watch: {
       dev: {
         files: [
-          'src/**/*',
+          '<%%= pkg.source_folder %>/**/*',
         ],
         tasks: ['dev'],
         options: {
@@ -18,10 +18,10 @@ module.exports = function(grunt) {
       dev: {
         options:{
           sourcemap:true,
-          loadPath: 'src/assets/bower_components/'
+          loadPath: '<%%= pkg.source_folder %>/assets/bower_components/'
         },
         files:{
-          'src/assets/css/main.css':'src/scss/main.scss'
+          '<%%= pkg.source_folder %>/assets/css/main.css':'<%%= pkg.source_folder %>/scss/main.scss'
         }
       }
     },
@@ -39,65 +39,65 @@ module.exports = function(grunt) {
         },
         files:[{
           expand: true,
-          cwd:'src/assets/images/',
+          cwd:'<%%= pkg.source_folder %>/assets/images/',
           src: ['**/*.png','**/*.jpg'],
-          dest:'build/assets/images'
+          dest:'<%%= pkg.build_folder %>/assets/images'
         }]
       }
     },
     copy:{
       build:{
         files:[
-          {expand:true,cwd:'src/assets/images/',src:['**/*.gif'],dest:'build/assets/images/'},
-          {expand:true,cwd:'src/assets/fonts/',src:['*'],dest:'build/assets/fonts/'}
+          {expand:true,cwd:'<%%= pkg.source_folder %>/assets/images/',src:['**/*.gif'],dest:'<%%= pkg.build_folder %>/assets/images/'},
+          {expand:true,cwd:'<%%= pkg.source_folder %>/assets/css/fonts/',src:['*'],dest:'<%%= pkg.build_folder %>/assets/css/fonts/'}
         ]
       }
     },
     clean: {
-      build:['.tmp','build']    
+      build:['.tmp','<%%= pkg.build_folder %>']    
     },
     webfont: {
       icons: {
         stylesheet: 'scss',
-        destCss: 'build/css/',
+        destCss: '<%%= pkg.source_folder %>/assets/css/',
         src: 'production/icons/*.svg',
-        dest: 'src/fonts/'
+        dest: '<%%= pkg.source_folder %>/assets/css/fonts/'
       }
     },
     assemble: {
       options: {
         flatten: true,
-        assets: 'src/assets',
-        layout: 'src/templates/layouts/default.hbs',
-        partials: 'src/templates/partials/*.hbs',
+        assets: '<%%= pkg.source_folder %>/assets',
+        layout: '<%%= pkg.source_folder %>/templates/layouts/default.hbs',
+        partials: '<%%= pkg.source_folder %>/templates/partials/*.hbs',
         postprocess: require('pretty')
       },
       pages: {
         files:[
-          {expand:true,cwd:'src/templates/pages/',src:['**/*.hbs'],dest:'src/'}
+          {expand:true,cwd:'<%%= pkg.source_folder %>/templates/pages/',src:['**/*.hbs'],dest:'<%%= pkg.source_folder %>/'}
         ]
       }
     },
     useminPrepare: {
         options: {
-            dest: 'build'  
+            dest: '<%%= pkg.build_folder %>'  
         },
-        html: ['src/index.html']
+        html: ['<%%= pkg.source_folder %>/index.html']
     },
     usemin: {
         options: {
-          dirs: ['build']    
+          dirs: ['<%%= pkg.build_folder %>']    
         },
-        html: ['build/{,*/}*.html'],
-        css: ['build/css/{,*/}*.css']
+        html: ['<%%= pkg.build_folder %>/{,*/}*.html'],
+        css: ['<%%= pkg.build_folder %>/css/{,*/}*.css']
     },
     rev: {
       build: {
         files: {
             src: [
-              'build/assets/js/{,*/}*.js',
-              'build/assets/css/{,*/}*.css',
-              'build/assets/css/fonts/*'
+              '<%%= pkg.build_folder %>/assets/js/{,*/}*.js',
+              '<%%= pkg.build_folder %>/assets/css/{,*/}*.css',
+              '<%%= pkg.build_folder %>/assets/css/fonts/*'
             ]
         }
       }
@@ -117,9 +117,9 @@ module.exports = function(grunt) {
           },
           files: [{
               expand: true,
-              cwd: 'src',
+              cwd: '<%%= pkg.source_folder %>',
               src: '**/*.html',
-              dest: 'build'
+              dest: '<%%= pkg.build_folder %>'
           }]
       }
     },
