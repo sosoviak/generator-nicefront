@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: grunt.file.readJSON('config.json'),
     watch: {
       dev: {
         files: [
@@ -49,7 +49,9 @@ module.exports = function(grunt) {
       build:{
         files:[
           {expand:true,cwd:'<%%= pkg.source_folder %>/assets/images/',src:['**/*.gif'],dest:'<%%= pkg.build_folder %>/assets/images/'},
-          {expand:true,cwd:'<%%= pkg.source_folder %>/assets/css/fonts/',src:['*'],dest:'<%%= pkg.build_folder %>/assets/css/fonts/'}
+          {expand:true,cwd:'<%%= pkg.source_folder %>/assets/css/fonts/',src:['*'],dest:'<%%= pkg.build_folder %>/assets/css/fonts/'},
+          {expand:true,cwd:'<%%= pkg.source_folder %>',src:['*','!*.html'],dest:'<%%= pkg.build_folder %>',filter:'isFile'},
+          {'<%%= pkg.build_folder %>/.htaccess':'<%%= pkg.source_folder %>/.htaccess'}
         ]
       }
     },
@@ -118,7 +120,7 @@ module.exports = function(grunt) {
           files: [{
               expand: true,
               cwd: '<%%= pkg.source_folder %>',
-              src: '**/*.html',
+              src: ['**/*.html','!assets/**/*'],
               dest: '<%%= pkg.build_folder %>'
           }]
       }

@@ -94,7 +94,7 @@ NicefrontGenerator.prototype.askFor = function askFor() {
 };
 
 NicefrontGenerator.prototype.readIndex = function readIndex(){
-  this.indexFile = this.engine(this.read('files/templates/layouts/default.hbs'), this);
+  this.indexFile = this.engine(this.read('files/default.hbs'), this);
 };
 
 NicefrontGenerator.prototype.app = function app() {
@@ -102,51 +102,69 @@ NicefrontGenerator.prototype.app = function app() {
   var scriptsSrcs = [];
   var cssSrcs = [];
 
-  this.mkdir('src');
-  this.mkdir('src/assets');
-  this.mkdir('src/assets/js');
-  this.mkdir('src/assets/images');
-  this.mkdir('src/assets/css');
-  this.mkdir('src/assets/css/fonts');
+  this.mkdir(this.sourceFolder);
+  this.mkdir(this.sourceFolder + '/assets');
+  this.mkdir(this.sourceFolder + '/assets/js');
+  this.mkdir(this.sourceFolder + '/assets/images');
+  this.mkdir(this.sourceFolder + '/assets/css');
+  this.mkdir(this.sourceFolder + '/assets/css/fonts');
   
-  this.directory('files/templates/','src/templates');
+  this.directory('files/templates/',this.sourceFolder + '/templates');
 
   // CSS
   if (this.cssFramework === 'pure'){
-    this.directory('files/scss/','src/scss');
-    this.copy('file/pure-min.css','src/assets/css/pure-min.css');
+    this.directory('files/scss/',this.sourceFolder + '/scss');
+    this.copy('files/pure-min.css',this.sourceFolder + '/assets/css/pure-min.css');
     cssSrcs.push('{{assets}}/css/pure-min.css');
   } else {
     bowerPaks.push('inuit.css');
-    this.mkdir('src/scss');
-    this.copy('file/main-inuit.scss', 'src/scss/main.scss');
+    this.mkdir(this.sourceFolder + '/scss');
+    this.copy('files/main-inuit.scss', this.sourceFolder + '/scss/main.scss');
   }
   cssSrcs.push('{{assets}}/css/main.css');
 
   // JS
-  this.copy('files/js/plugins.js', 'src/assets/js/plugins.js');
+  this.copy('files/js/plugins.js', this.sourceFolder + '/assets/js/plugins.js');
   scriptsSrcs.push('{{assets}}/bower_components/jquery/jquery.js');
   scriptsSrcs.push('{{assets}}/bower_components/jquery.easing/js/jquery.easing.js');
   scriptsSrcs.push('{{assets}}/js/plugins.js');
 
-  this.copy('files/htaccess', 'build/.htaccess');
-  this.copy('files/robots.txt', 'build/robots.txt');
+  this.copy('files/htaccess', this.sourceFolder + '/.htaccess');
+  this.copy('files/robots.txt', this.sourceFolder + '/robots.txt');
 
-  
+  // IE8
   if (this.ie8){
     bowerPaks.push('jquery#1.10.2');    
   } else {
     bowerPaks.push('jquery');
   }
 
-  if (this.transit)
+  // Extras
+  if (this.transit){
     bowerPaks.push('jquery.transit');
     scriptsSrcs.push('{{assets}}/bower_components/jquery.transit/jquery.transit.js');
-  if (this.lightbox)
+  }
+  if (this.lightbox){
     bowerPaks.push('magnific-popup');
     scriptsSrcs.push('{{assets}}/bower_components/magnific-popup/dist/jquery.magnific-popup.js');
+  }
 
+  // Usemin modules
+  this.indexFile = this.appendFiles({
+    html: this.indexFile,
+    fileType: 'css',
+    optimizedPath: '{{assets}}/css/main.css',
+    sourceFileList: cssSrcs
+  });
+
+  this.indexFile = this.appendScripts(this.indexFile, '{{assets}}/js/main.js', scriptsSrcs);
+
+  // Install bower dependencies
   this.bowerInstall(bowerPaks,{save:true});
+};
+
+NicefrontGenerator.prototype.createIndexHtml = function createIndexHtml() {
+  this.write('src/templates/layouts/default.hbs', this.indexFile);
 };
 
 NicefrontGenerator.prototype.projectfiles = function projectfiles() {
