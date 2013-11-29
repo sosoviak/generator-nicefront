@@ -160,7 +160,7 @@ NicefrontGenerator.prototype.app = function app() {
   this.indexFile = this.appendScripts(this.indexFile, '{{assets}}/js/main.js', scriptsSrcs);
 
   // Install bower dependencies
-  this.bowerInstall(bowerPaks,{save:true});
+  //this.bowerInstall(bowerPaks,{save:true});
 };
 
 NicefrontGenerator.prototype.createIndexHtml = function createIndexHtml() {
