@@ -7,7 +7,7 @@
   	<% if (transit) { %>"jquery.transit": "~0.9.9", <% } %>
   	<% if (lightbox) { %> "magnific-popup": "~0.9.9", <% } %>
   	<% if (cssFramework === 'inuit') { %> "inuit.css": "~5.0.0", <% } %>
-    <% if (cssFramework === 'pure') { %> "nicecss": "https://github.com/sosoviak/nicecss.git", <% } %>
+    <% if (cssFramework === 'nice') { %> "nicecss": "https://github.com/sosoviak/nicecss.git", <% } %>
   	"bower-bourbon": "~3.1.8"
   }
 }
