@@ -51,8 +51,8 @@ NicefrontGenerator.prototype.askFor = function askFor() {
       message: 'Choose a CSS Framework',
       choices: [
         {
-          name: 'Pure CSS',
-          value: 'pure'
+          name: 'NiceCSS',
+          value: 'nice'
         },
         {
           name: 'Inuit',
@@ -112,10 +112,14 @@ NicefrontGenerator.prototype.app = function app() {
   this.directory('files/templates/',this.sourceFolder + '/templates');
 
   // CSS
-  if (this.cssFramework === 'pure'){
+  if (this.cssFramework === 'nice'){
+    /*
     this.directory('files/scss/',this.sourceFolder + '/scss');
     this.copy('files/pure-min.css',this.sourceFolder + '/assets/css/pure-min.css');
     cssSrcs.push('{{assets}}/css/pure-min.css');
+    */
+    this.mkdir(this.sourceFolder + '/scss');
+    this.copy('files/main-nice.scss', this.sourceFolder + '/scss/main.scss');
   } else {
     bowerPaks.push('inuit.css');
     this.mkdir(this.sourceFolder + '/scss');
