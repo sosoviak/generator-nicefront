@@ -120,6 +120,7 @@ NicefrontGenerator.prototype.app = function app() {
     */
     this.mkdir(this.sourceFolder + '/scss');
     this.copy('files/main-nice.scss', this.sourceFolder + '/scss/main.scss');
+    this.write(this.sourceFolder + '/scss/_vars.scss','// Place here your project vars //');
   } else {
     bowerPaks.push('inuit.css');
     this.mkdir(this.sourceFolder + '/scss');
